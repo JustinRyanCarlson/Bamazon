@@ -37,23 +37,25 @@ function run() {
         message: 'How many units would you like to purchase?'
     }]).then(function(answers) {
 
-        connection.query("SELECT stock_quanity FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
-            quanityForID = res[0].stock_quanity;
-            // not needed 
-            console.log(quanityForID - answers.quanity);
+        connection.query("SELECT stock_quanity, price FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
+            test(answers.itemID, answers.quanity, res[0].stock_quanity, res[0].price);
         });
 
-        var newQuanity = quanityForID - answers.quanity;
-        // i think this is running before the response comes back from 
-        if (newQuanity < 0) {
-            console.log('There is not enough stock for the quanity you chose please try again');
-            console.log('Current quanity for ID ' + answers.itemID + ' is ' + quanityForID);
-            run();
-        } else {
-            connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [newQuanity, answers.itemID], function(err, res) {
-                if (err) throw err;
-            });
-            run();
+        function test(answersItemID, answersQuanity, quanityForID, price) {
+            var newQuanity = quanityForID - answersQuanity;
+            // i think this is running before the response comes back from 
+            if (newQuanity < 0) {
+                console.log('There is not enough stock for the quanity you chose please try again');
+                console.log('Current quanity for ID ' + answersItemID + ' is ' + quanityForID);
+                run();
+            } else {
+                connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [newQuanity, answersItemID], function(err, res) {
+                    if (err) throw err;
+                    var totalCost = answersQuanity * price;
+                    console.log('Thank you for your order!\nYour total cost was $' + totalCost + '\n');
+                    run();
+                });
+            }
         }
     });
 }

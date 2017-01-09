@@ -3,24 +3,25 @@ var inquirer = require('inquirer');
 var fs = require('fs');
 var quanityForID;
 // currently not working need to make it wait for response before connection
-var password = fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
+fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     if (err) throw err;
-    return data;
+    connectSQL(data);
 });
 
 
+function connectSQL(password) {
+    var connection = mysql.createConnection({
+        host: "localhost",
+        port: 3306,
+        user: "root",
+        password: password,
+        database: "Bamazon"
+    });
 
-var connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "",
-    database: "Bamazon"
-});
-
-connection.connect(function(err) {
-    if (err) throw err;
-});
+    connection.connect(function(err) {
+        if (err) throw err;
+    });
+}
 
 run();
 

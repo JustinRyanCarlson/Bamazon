@@ -43,7 +43,7 @@ function run() {
 
         function test(answersItemID, answersQuanity, quanityForID, price) {
             var newQuanity = quanityForID - answersQuanity;
-            // i think this is running before the response comes back from 
+
             if (newQuanity < 0) {
                 console.log('There is not enough stock for the quanity you chose please try again');
                 console.log('Current quanity for ID ' + answersItemID + ' is ' + quanityForID);
@@ -57,5 +57,6 @@ function run() {
                 });
             }
         }
+
     });
 }

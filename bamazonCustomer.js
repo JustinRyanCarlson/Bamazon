@@ -1,7 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require('inquirer');
 var fs = require('fs');
-var quanityForID;
 var connection;
 
 fs.readFile('local_server_password.txt', 'utf8', function(err, data) {

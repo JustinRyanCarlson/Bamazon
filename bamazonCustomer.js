@@ -4,11 +4,20 @@ var fs = require('fs');
 require('console.table');
 var connection;
 
+
+
+
+
 fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     if (err) throw err;
+
     connectSQL(data);
     run();
 });
+
+
+
+
 
 
 function connectSQL(password) {
@@ -36,23 +45,37 @@ function run() {
 
         console.log('');
         console.table(prodTable);
-        inquire();
-
+        inquire(prodTable);
     });
 
 }
 
 
-function inquire() {
+function inquire(itemsArr) {
     inquirer.prompt([{
         name: 'itemID',
-        message: 'Please enter the ID for the item you would like to purchase'
+        message: 'Please enter the ID for the item you would like to purchase',
+        validate: function(value) {
+            var pass = value > 0 && value <= itemsArr.length;
+            if (pass) {
+                return true;
+            }
+            return 'Please enter a valid Item ID';
+        }
     }, {
         name: 'quanity',
-        message: 'How many units would you like to purchase?'
+        message: 'How many units would you like to purchase?',
+        validate: function(value) {
+            var pass = value > 0 && Number.isInteger(parseInt(value));
+            if (pass) {
+                return true;
+            }
+            return 'Please enter a valid quanity to purchase';
+        }
     }]).then(function(answers) {
 
         connection.query("SELECT stock_quanity, price FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
+
             var newQuanity = res[0].stock_quanity - answers.quanity;
             var priceForID = res[0].price;
 

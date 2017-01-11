@@ -50,7 +50,7 @@ function run() {
             } else {
                 connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [newQuanity, answersItemID], function(err, res) {
                     if (err) throw err;
-                    var totalCost = answersQuanity * price;
+                    var totalCost = (answersQuanity * price).toFixed(2);
                     console.log('Thank you for your order!\nYour total cost was $' + totalCost + '\n');
                     run();
                 });

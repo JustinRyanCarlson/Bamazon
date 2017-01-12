@@ -56,6 +56,7 @@ function run() {
 
 function viewProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
         var prodTable = [];
 
         for (var i = 0; i < res.length; i++) {
@@ -70,6 +71,7 @@ function viewProducts() {
 
 function viewLowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quanity<=10", function(err, res) {
+        if (err) throw err;
         var prodTable = [];
 
         for (var i = 0; i < res.length; i++) {
@@ -84,6 +86,7 @@ function viewLowInventory() {
 
 function addToInventory() {
     connection.query("SELECT item_id FROM products", function(err, res) {
+        if (err) throw err;
 
         inquirer.prompt([{
             name: 'itemID',
@@ -95,12 +98,21 @@ function addToInventory() {
                 }
                 return 'Please enter a valid Item ID';
             }
-
-            // need to add another q for quanity
-
-
+        }, {
+            name: 'itemQuanity',
+            message: 'Please enter the new total quanity for the selected item',
+            validate: function(value) {
+                var pass = value >= 0;
+                if (pass) {
+                    return true;
+                }
+                return 'Please enter a valid quanity';
+            }
         }]).then(function(answers) {
-
+            connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [answers.itemQuanity, answers.itemID], function(err, res) {
+                if (err) throw err;
+                run();
+            });
         });
     });
 }

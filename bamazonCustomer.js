@@ -53,6 +53,7 @@ function run() {
 
 function inquire(itemsArr) {
     inquirer.prompt([{
+
         name: 'itemID',
         message: 'Please enter the ID for the item you would like to purchase',
         validate: function(value) {
@@ -62,7 +63,9 @@ function inquire(itemsArr) {
             }
             return 'Please enter a valid Item ID';
         }
+
     }, {
+
         name: 'quanity',
         message: 'How many units would you like to purchase?',
         validate: function(value) {
@@ -72,16 +75,16 @@ function inquire(itemsArr) {
             }
             return 'Please enter a valid quanity to purchase';
         }
+
     }]).then(function(answers) {
 
         connection.query("SELECT stock_quanity, price FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
-
             var newQuanity = res[0].stock_quanity - answers.quanity;
             var priceForID = res[0].price;
 
             if (newQuanity < 0) {
                 console.log('There is not enough stock for the quanity you chose please try again');
-                console.log('Current quanity for ID ' + answers.itemID + ' is ' + res[0].stock_quanity);
+                console.log('Current quanity for Item ID ' + answers.itemID + ' is ' + res[0].stock_quanity);
                 run();
             } else {
                 connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [newQuanity, answers.itemID], function(err, res) {

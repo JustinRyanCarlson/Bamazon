@@ -1,4 +1,4 @@
-var mysql = require("mysql");
+var mysql = require('mysql');
 var inquirer = require('inquirer');
 var fs = require('fs');
 require('console.table');

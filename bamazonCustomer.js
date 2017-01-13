@@ -1,4 +1,4 @@
-var mysql = require("mysql");
+var mysql = require('mysql');
 var inquirer = require('inquirer');
 var fs = require('fs');
 require('console.table');
@@ -78,9 +78,12 @@ function inquire(itemsArr) {
 
     }]).then(function(answers) {
 
-        connection.query("SELECT stock_quanity, price FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
+        connection.query("SELECT stock_quanity, price, product_sales, department_name FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
             var newQuanity = res[0].stock_quanity - answers.quanity;
             var priceForID = res[0].price;
+            var totalCost = (answers.quanity * priceForID).toFixed(2);
+            var totalSales = parseFloat(totalCost) + parseFloat(res[0].product_sales);
+            var department = res[0].department_name;
 
             if (newQuanity < 0) {
                 console.log('There is not enough stock for the quanity you chose please try again');
@@ -89,9 +92,22 @@ function inquire(itemsArr) {
             } else {
                 connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [newQuanity, answers.itemID], function(err, res) {
                     if (err) throw err;
-                    var totalCost = (answers.quanity * priceForID).toFixed(2);
-                    console.log('Thank you for your order!\nYour total cost was $' + totalCost + '\n');
-                    run();
+
+                    connection.query("UPDATE products SET product_sales=? WHERE item_id=?", [totalSales, answers.itemID], function(err, res) {
+                        if (err) throw err;
+
+                        connection.query("SELECT total_sales FROM departments WHERE department_name=?", [department], function(err, res) {
+                            if (err) throw err;
+                            var departmentTotalSales = parseFloat(res[0].total_sales) + totalSales;
+
+                            connection.query("UPDATE departments SET total_sales=? WHERE department_name=?", [departmentTotalSales, department], function(err, res) {
+                                if (err) throw err;
+
+                                console.log('Thank you for your order!\nYour total cost was $' + totalCost + '\n');
+                                run();
+                            });
+                        });
+                    });
                 });
             }
         });

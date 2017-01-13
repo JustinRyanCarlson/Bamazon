@@ -37,6 +37,7 @@ function connectSQL(password) {
 
 function run() {
     connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
         var prodTable = [];
 
         for (var i = 0; i < res.length; i++) {
@@ -79,6 +80,8 @@ function inquire(itemsArr) {
     }]).then(function(answers) {
 
         connection.query("SELECT stock_quanity, price, product_sales, department_name FROM products WHERE item_id=?", [answers.itemID], function(err, res) {
+            if (err) throw err;
+
             var newQuanity = res[0].stock_quanity - answers.quanity;
             var priceForID = res[0].price;
             var totalCost = (answers.quanity * priceForID).toFixed(2);
@@ -98,6 +101,7 @@ function inquire(itemsArr) {
 
                         connection.query("SELECT total_sales FROM departments WHERE department_name=?", [department], function(err, res) {
                             if (err) throw err;
+
                             var departmentTotalSales = parseFloat(res[0].total_sales) + totalSales;
 
                             connection.query("UPDATE departments SET total_sales=? WHERE department_name=?", [departmentTotalSales, department], function(err, res) {

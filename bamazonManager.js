@@ -159,9 +159,9 @@ function addNewProduct() {
         }
 
     }]).then(function(answers) {
-        var query = "INSERT INTO products (product_name, department_name, price, stock_quanity)" +
+        var query = "INSERT INTO products (product_name, department_name, price, stock_quanity, product_sales)" +
             " VALUES ('" + answers.productName + "','" + answers.departmentName + "','" +
-            answers.price + "','" + answers.quanity + "');";
+            answers.price + "','" + answers.quanity + "', '0.00');";
 
         connection.query(query, function(err, res) {
             if (err) throw err;

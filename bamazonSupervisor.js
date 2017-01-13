@@ -49,3 +49,27 @@ function run() {
         }
     });
 }
+
+function viewProductSalesByDepartment() {
+    connection.query("SELECT * FROM departments", function(err, res) {
+        var prodTable = [];
+
+        for (var i = 0; i < res.length; i++) {
+            prodTable.push({
+                'Department ID': res[i].department_id,
+                'Department Name': res[i].department_name,
+                'Over Head Costs': res[i].over_head_costs.toFixed(2),
+                'Total Sales': res[i].total_sales.toFixed(2),
+                'Total Profit': (res[i].total_sales - res[i].over_head_costs).toFixed(2)
+            });
+        }
+
+        console.log('');
+        console.table(prodTable);
+        run();
+    });
+}
+
+function createNewDepartment() {
+
+}

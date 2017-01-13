@@ -69,7 +69,7 @@ function inquire(itemsArr) {
         name: 'quanity',
         message: 'How many units would you like to purchase?',
         validate: function(value) {
-            var pass = value > 0 && Number.isInteger(parseInt(value));
+            var pass = value > 0 && value % 1 === 0;
             if (pass) {
                 return true;
             }

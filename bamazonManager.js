@@ -36,10 +36,12 @@ function run() {
     console.log('');
 
     inquirer.prompt([{
+
         type: 'list',
         name: 'arg',
         message: 'Please select a action',
         choices: ['View Products for Sale', 'View Low Inventory', 'Add to Inventory', 'Add New Product'],
+
     }]).then(function(answers) {
         if (answers.arg === 'View Products for Sale') {
             viewProducts();
@@ -89,6 +91,7 @@ function addToInventory() {
         if (err) throw err;
 
         inquirer.prompt([{
+
             name: 'itemID',
             message: 'Please enter the ID for the item you would like to modify',
             validate: function(value) {
@@ -98,7 +101,9 @@ function addToInventory() {
                 }
                 return 'Please enter a valid Item ID';
             }
+
         }, {
+
             name: 'itemQuanity',
             message: 'Please enter the new total quanity for the selected item',
             validate: function(value) {
@@ -108,6 +113,7 @@ function addToInventory() {
                 }
                 return 'Please enter a valid quanity';
             }
+
         }]).then(function(answers) {
             connection.query("UPDATE products SET stock_quanity=? WHERE item_id=?", [answers.itemQuanity, answers.itemID], function(err, res) {
                 if (err) throw err;
@@ -118,5 +124,49 @@ function addToInventory() {
 }
 
 function addNewProduct() {
+    inquirer.prompt([{
 
+        name: 'productName',
+        message: 'Please enter the name for the product you would like to add',
+
+    }, {
+
+        name: 'departmentName',
+        message: 'Please enter the department name for the new product',
+
+    }, {
+
+        name: 'price',
+        message: 'Please enter the price for the new product',
+        validate: function(value) {
+            var pass = value >= 0;
+            if (pass) {
+                return true;
+            }
+            return 'Please enter a valid price';
+        }
+
+    }, {
+
+        name: 'quanity',
+        message: 'Please enter the total quanity for the new product',
+        validate: function(value) {
+            var pass = value >= 0 && value % 1 === 0;
+            if (pass) {
+                return true;
+            }
+            return 'Please enter a valid quanity';
+        }
+
+    }]).then(function(answers) {
+        var query = "INSERT INTO products (product_name, department_name, price, stock_quanity)" +
+            " VALUES ('" + answers.productName + "','" + answers.departmentName + "','" +
+            answers.price + "','" + answers.quanity + "');";
+
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            console.log(answers.productName + ' successfully added');
+            run();
+        });
+    });
 }

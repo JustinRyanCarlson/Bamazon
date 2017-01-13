@@ -71,5 +71,32 @@ function viewProductSalesByDepartment() {
 }
 
 function createNewDepartment() {
+    inquirer.prompt([{
 
+        name: 'deptName',
+        message: 'Please enter a new department name',
+
+    }, {
+
+        name: 'overHead',
+        message: 'Please enter the over head cost for the new department',
+        validate: function(value) {
+            var pass = value > 0;
+            if (pass) {
+                return true;
+            }
+            return 'Please enter a over head cost';
+        },
+
+    }]).then(function(answers) {
+        var query = "INSERT INTO departments (department_name, over_head_costs, total_sales)" +
+            " VALUES ('" + answers.deptName + "','" + answers.overHead + "', '0.00');";
+
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+
+            console.log('Department ' + answers.deptName + ' added successfully!');
+            run();
+        });
+    });
 }

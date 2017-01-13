@@ -1,11 +1,18 @@
+//
+// VARIABLES AND REQUIRES -------------------------------------------------------------------------------------------------------------
+//
+
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 var fs = require('fs');
 require('console.table');
 var connection;
 
+//
+// BASE CODE --------------------------------------------------------------------------------------------------------------------------
+//
 
-
+// Reads the text in local_server_password.txt and passes it to the connectSQL function.
 fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     if (err) throw err;
 
@@ -13,10 +20,11 @@ fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     run();
 });
 
+//
+// FUNCTIONS --------------------------------------------------------------------------------------------------------------------------
+//
 
-
-
-
+// Uses the password passed in to connect to the Bamazon database
 function connectSQL(password) {
     connection = mysql.createConnection({
         host: "localhost",
@@ -31,7 +39,7 @@ function connectSQL(password) {
     });
 }
 
-
+// Uses inquirer to list choices to the user. Depending on what the user chooses, the corresponding function is then called.
 function run() {
     console.log('');
 
@@ -55,7 +63,8 @@ function run() {
     });
 }
 
-
+// Queries the database for all its information from the products table then places selected row data into a object and
+// pushes that object to an array to be printed to the console as a table. 
 function viewProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
@@ -71,6 +80,9 @@ function viewProducts() {
     });
 }
 
+// Queries the database for all its information where the stock quanity is less than or
+// equal to 10. It then uses the same method as the viewProducts function to store the information
+// and print it to the console as a table.
 function viewLowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quanity<=10", function(err, res) {
         if (err) throw err;
@@ -86,6 +98,12 @@ function viewLowInventory() {
     });
 }
 
+// Queries the database for the item_id column of the products table. This is used to make sure
+// the user cannot select a item id outside of how many exist in the database. Now that I look at this
+// I see a bug where a item is deleted from the database where the length of the res object would be 1
+// less than the last added item (ie. 10 items user deletes item id 2, now there are 9 items but an item with
+// an item_id of 10 exists). I will fix this in the future. The users answers are then used to update the stock quanity
+// for the selected item id.
 function addToInventory() {
     connection.query("SELECT item_id FROM products", function(err, res) {
         if (err) throw err;
@@ -123,6 +141,8 @@ function addToInventory() {
     });
 }
 
+// Uses inquirer to ask the user for some input. Once input is recieved, this data is used to add a new product
+// to the database.
 function addNewProduct() {
     inquirer.prompt([{
 

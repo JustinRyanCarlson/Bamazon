@@ -1,13 +1,18 @@
+//
+// VARIABLES AND REQUIRES -------------------------------------------------------------------------------------------------------------
+//
+
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 var fs = require('fs');
 require('console.table');
 var connection;
 
+//
+// BASE CODE --------------------------------------------------------------------------------------------------------------------------
+//
 
-
-
-
+// Reads the text in local_server_password.txt and passes it to the connectSQL function.
 fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     if (err) throw err;
 
@@ -15,11 +20,11 @@ fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     run();
 });
 
+//
+// FUNCTIONS --------------------------------------------------------------------------------------------------------------------------
+//
 
-
-
-
-
+// Uses the password passed in to connect to the Bamazon database
 function connectSQL(password) {
     connection = mysql.createConnection({
         host: "localhost",
@@ -34,7 +39,9 @@ function connectSQL(password) {
     });
 }
 
-
+// Reads all data from the products table of the database then adds properties we want from a specific 
+// row to a object and pushes this object to an array so console.table can be correctly used.
+// Prints the able to the console and calls the inquire function passing in the created array.
 function run() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
@@ -51,7 +58,10 @@ function run() {
 
 }
 
-
+// Uses inquirer to ask the user questions via command line then uses the users responses to alter
+// the database. Includes checks to make sure the user cannot pass a char to a int field in the
+// database for example. Checks to make sure there is sufficient quanity of a item before altering
+// the database.
 function inquire(itemsArr) {
     inquirer.prompt([{
 

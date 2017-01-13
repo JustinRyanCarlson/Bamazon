@@ -1,11 +1,18 @@
+//
+// VARIABLES AND REQUIRES -------------------------------------------------------------------------------------------------------------
+//
+
 var mysql = require('mysql');
 var inquirer = require('inquirer');
 var fs = require('fs');
 require('console.table');
 var connection;
 
+//
+// BASE CODE --------------------------------------------------------------------------------------------------------------------------
+//
 
-
+// Reads the text in local_server_password.txt and passes it to the connectSQL function.
 fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     if (err) throw err;
 
@@ -13,10 +20,11 @@ fs.readFile('local_server_password.txt', 'utf8', function(err, data) {
     run();
 });
 
+//
+// FUNCTIONS --------------------------------------------------------------------------------------------------------------------------
+//
 
-
-
-
+// Uses the password passed in to connect to the Bamazon database
 function connectSQL(password) {
     connection = mysql.createConnection({
         host: "localhost",

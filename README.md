@@ -8,9 +8,10 @@ How to run this app:
 
 1. Clone this repository to your local machine. 
 2. Enter your local server password in the "local_server_password.txt" file and save it.
-3. Navigate you the Bamazon directory that was created in step 1.
-4. Enter `npm install` in the command line to install all dependancies for this project.
-5. Enter ‘node FILENAME’ to run the file of your choosing. (bamazonCustomer.js, bamazonManager.js, bamazonSupervisor.js) 
+3. Create the database by importing the schema from Bamazon_schema.sql into a database management program. (Sequel Pro, mySQL Workbench)
+4. Navigate you the Bamazon directory that was created in step 1.
+5. Enter `npm install` in the command line to install all dependancies for this project.
+6. Enter ‘node FILENAME’ to run the file of your choosing. (bamazonCustomer.js, bamazonManager.js, bamazonSupervisor.js) 
  
 
 

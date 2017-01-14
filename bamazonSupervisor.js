@@ -39,6 +39,7 @@ function connectSQL(password) {
     });
 }
 
+// Uses inquirer to list choices to the user. Depending on what the user chooses, the corresponding function is then called.
 function run() {
     console.log('');
 
@@ -58,6 +59,8 @@ function run() {
     });
 }
 
+// Queries the database for all the information from the departments table then places selected row data into a object and
+// pushes that object to an array to be printed to the console as a table. 
 function viewProductSalesByDepartment() {
     connection.query("SELECT * FROM departments", function(err, res) {
         var prodTable = [];
@@ -78,6 +81,8 @@ function viewProductSalesByDepartment() {
     });
 }
 
+// Uses inquirer to ask the user some parameters then queries the database to add this information
+// to the departments table.
 function createNewDepartment() {
     inquirer.prompt([{
 

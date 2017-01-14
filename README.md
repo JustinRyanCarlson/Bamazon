@@ -1,6 +1,6 @@
 # Bamazon
 
-Discription: This application utilizes Node.js and mySQL to create a mock command line interface (CLI) for a e-commerce site. Inquirer and console.table packages are used to provide the user with a pleasant interface for interacting with the application from the command line.
+Description: This application utilizes Node.js and mySQL to create a mock command line interface (CLI) for a e-commerce site. Inquirer and console.table packages are used to provide the user with a pleasant interface for interacting with the application from the command line.
 
 
 

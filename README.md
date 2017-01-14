@@ -11,7 +11,7 @@ How to run this app:
 3. Create the database by importing the schema from Bamazon_schema.sql into a database management program. (Sequel Pro, mySQL Workbench)
 4. Navigate you the Bamazon directory that was created in step 1.
 5. Enter `npm install` in the command line to install all dependancies for this project.
-6. Enter ‘node FILENAME’ to run the file of your choosing. (bamazonCustomer.js, bamazonManager.js, bamazonSupervisor.js) 
+6. Enter `node FILENAME` to run the file of your choosing. (bamazonCustomer.js, bamazonManager.js, bamazonSupervisor.js) 
  
 
 
